@@ -27,6 +27,7 @@ encode(bytea, B) when is_binary(B)          -> <<(byte_size(B)):?int32, B/binary
 encode(text, B) when is_binary(B)           -> <<(byte_size(B)):?int32, B/binary>>;
 encode(varchar, B) when is_binary(B)        -> <<(byte_size(B)):?int32, B/binary>>;
 encode(uuid, B) when is_binary(B)           -> encode_uuid(B);
+encode(json, B) when is_binary(B)           -> <<(byte_size(B)):?int32, B/binary>>;
 encode(boolarray, L) when is_list(L)        -> encode_array(bool, L);
 encode(int2array, L) when is_list(L)        -> encode_array(int2, L);
 encode(int4array, L) when is_list(L)        -> encode_array(int4, L);
@@ -37,6 +38,7 @@ encode(chararray, L) when is_list(L)        -> encode_array(bpchar, L);
 encode(varchararray, L) when is_list(L)     -> encode_array(varchar, L);
 encode(textarray, L) when is_list(L)        -> encode_array(text, L);
 encode(uuidarray, L) when is_list(L)        -> encode_array(uuid, L);
+encode(jsonarray, L) when is_list(L)        -> encode_array(json, L);
 encode(Type, L) when is_list(L)             -> encode(Type, list_to_binary(L));
 encode(_Type, _Value)                       -> {error, unsupported}.
 
@@ -66,6 +68,7 @@ decode(chararray, B)                        -> decode_array(B);
 decode(varchararray, B)                     -> decode_array(B);
 decode(textarray, B)                        -> decode_array(B);
 decode(uuidarray, B)                        -> decode_array(B);
+decode(jsonarray, B)                        -> decode_array(B);
 decode(_Other, Bin)                         -> Bin.
 
 encode_array(Type, A) ->
@@ -148,6 +151,7 @@ supports(timestamp)   -> true;
 supports(timestamptz) -> true;
 supports(interval)    -> true;
 supports(uuid)        -> true;
+supports(json)        -> true;
 supports(boolarray)   -> true;
 supports(int2array)   -> true;
 supports(int4array)   -> true;
@@ -158,4 +162,5 @@ supports(chararray)   -> true;
 supports(textarray)   -> true;
 supports(varchararray) -> true;
 supports(uuidarray)   -> true;
+supports(jsonarray)   -> true;
 supports(_Type)       -> false.
